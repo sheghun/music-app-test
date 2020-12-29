@@ -5,8 +5,8 @@ import { SuperTest, Test } from 'supertest';
 import app from '@server';
 import UserDao from '@daos/User/UserDao.mock';
 import User, { IUser } from '@entities/User';
-import { pErr } from '@shared/functions';
-import { paramMissingError } from '@shared/constants';
+import { pErr } from '../../src/utils/functions';
+import { paramMissingError } from '../../src/utils/constants';
 import { IReqBody, IResponse } from '../support/types';
 
 

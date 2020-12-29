@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "music-app",
   "version": "0.0.0",
   "scripts": {
     "build": "ts-node build.ts",
@@ -59,6 +59,7 @@
     "build.ts"
   ],
   "dependencies": {
+    "aws-sdk": "^2.818.0",
     "command-line-args": "^5.1.1",
     "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
@@ -83,12 +84,16 @@
     "@types/node": "^14.14.16",
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
-    "@typescript-eslint/parser": "^4.11.1",
+    "@typescript-eslint/parser": "^2.20.0",
     "eslint": "^7.16.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "find": "^0.3.0",
     "fs-extra": "^9.0.1",
     "jasmine": "^3.6.3",
     "nodemon": "^2.0.6",
+    "prettier": "^1.19.1",
     "supertest": "^6.0.1",
     "ts-node": "^9.1.1",
     "tsconfig-paths": "^3.9.0",
