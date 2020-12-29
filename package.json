@@ -91,6 +91,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
+    "express-validator": "^6.9.0",
     "find": "^0.3.0",
     "fs-extra": "^9.0.1",
     "jasmine": "^3.6.3",

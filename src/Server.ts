@@ -1,6 +1,5 @@
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import path from 'path';
 import helmet from 'helmet';
 
 import express, { NextFunction, Request, Response } from 'express';
@@ -9,18 +8,41 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from './utils/Logger';
+import * as mongoose from 'mongoose';
+import { setId } from './model/plugin/set-id.plugin';
 
 const app = express();
 const { BAD_REQUEST } = StatusCodes;
 
+/** ***********************************
+ * SET UP DB
+ * *************************************
+ */
+mongoose
+    .connect(process.env.DB_URL as string, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        autoIndex: false,
+        useFindAndModify: false,
+    })
+    .then(() => {
+        /**
+         * Run all logic needed after connecting to database
+         */
+        console.log('Connected to database');
+        mongoose.plugin(setId);
+    })
+    .catch(error => {
+        logger.err(error, true);
+        throw error;
+    });
 
-
-/************************************************************************************
+/** **********************************************************************************
  *                              Set basic express settings
  ***********************************************************************************/
 
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Show routes called in console during development

@@ -1,11 +1,21 @@
-exports.createAlbum = function createAlbum() {};
+import { body } from 'express-validator';
 
-exports.editAlbum = function editAlbum() {};
+export const createAlbum = [];
 
-exports.deleteAlbum = function deleteAlbum() {};
+export const editAlbum = function editAlbum() {};
 
-exports.addTracks = function addTracks() {};
+export const deleteAlbum = function deleteAlbum() {};
 
-exports.editTrack = function editTrack() {};
+export const getAlbum = function getAlbum() {};
 
-exports.deleteTrack = function deleteTrack() {};
+export const getAllAlbums = function getAllAlbums() {};
+
+export const addTrack = function addTracks() {};
+
+export const editTrack = function editTrack() {};
+
+export const getTrack = function getTrack() {};
+
+export const getAllTracks = function getAllTracks() {};
+
+export const deleteTrack = function deleteTrack() {};
