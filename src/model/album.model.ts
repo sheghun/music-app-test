@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { omitJsonFields } from './plugin/omit-json-fields.plugin';
 
 export interface AlbumModel extends mongoose.Document {
     name: string;
@@ -16,5 +17,7 @@ const albumSchema = new mongoose.Schema(
     },
     { timestamps: true },
 );
+
+albumSchema.plugin(omitJsonFields(['__v', 'createdAt', 'updatedAt']));
 
 export const Album = mongoose.model<AlbumModel>('Album', albumSchema);
