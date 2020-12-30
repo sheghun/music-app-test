@@ -167,11 +167,108 @@ export const addTrack = () => {
 };
 
 export const editTrack = [
+    validatorMiddleware([
+        check('albumId', 'album id is required')
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+        check('trackId', 'trackId is required')
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+        body('name', 'name of track is required')
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+    ]),
 
-]
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { params, body } = req;
+            const album = await AlbumService.updateTrack(params.albumId, params.trackId, {
+                name: body.name,
+            });
 
-export const getTrack = function getTrack() {};
+            return res.status(httpStatusCodes.OK).json({
+                success: true,
+                data: album,
+                message: 'Album track updated successfully',
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+];
 
-export const getAllTracks = function getAllTracks() {};
+export const getTrack = [
+    validatorMiddleware([
+        check('albumId', 'album id is required')
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+        check('trackId', 'trackId is required')
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+    ]),
 
-export const deleteTrack = function deleteTrack() {};
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { albumId, trackId } = req.params;
+            const album = await AlbumService.getTrack(albumId, trackId);
+            return res.status(httpStatusCodes.OK).json({
+                success: true,
+                data: album,
+                message: 'Tracked fetched succesfully',
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+];
+
+export const getAllTracks = [
+    validatorMiddleware([
+        check('id', "id is the album's id and it's required")
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+    ]),
+
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { albumId } = req.params;
+            const album = await AlbumService.getTrack(albumId, null, true);
+            return res.status(httpStatusCodes.OK).json({
+                success: true,
+                data: album,
+                message: 'Tracked fetched successfully',
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+];
+
+export const deleteTrack = [
+    validatorMiddleware([
+        check('id', "id is the album's id and it's required")
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+    ]),
+
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { albumId, trackId } = req.params;
+            const album = await AlbumService.deleteTrack(albumId, trackId);
+            return res.status(httpStatusCodes.OK).json({
+                success: true,
+                data: album,
+                message: 'Tracked fetched successfully',
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+];

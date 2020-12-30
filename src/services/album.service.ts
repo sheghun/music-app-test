@@ -53,6 +53,35 @@ export class AlbumService {
     }
 
     /**
+     * Retrieves and returns a track pass an optional boolean to fetch all tracks
+     * @param albumId
+     * @param trackId
+     * @param allTracks
+     */
+    static async getTrack(
+        albumId: string,
+        trackId: string | null,
+        allTracks = false,
+    ): Promise<AlbumModel['tracks'][0] | AlbumModel['tracks']> {
+        const album: AlbumModel = await this.model.findById(albumId);
+        if (!album) {
+            throw new BadRequestError(['Album with id does not exist']);
+        }
+
+        if (allTracks) {
+            return album.tracks;
+        }
+
+        const track = album.tracks.find(track => track._id === trackId);
+
+        if (!track) {
+            throw new BadRequestError(['Track with id does not exist in album']);
+        }
+
+        return track;
+    }
+
+    /**
      * Deletes a track from the album
      * @param albumId
      * @param trackId
