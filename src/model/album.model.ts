@@ -5,7 +5,7 @@ export interface AlbumModel extends mongoose.Document {
     name: string;
     description: string;
     date: Date;
-    tracks: Array<{ name: string; file: string }>;
+    tracks: Array<{ _id: string; name: string; file: string }>;
 }
 
 const albumSchema = new mongoose.Schema(
