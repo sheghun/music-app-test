@@ -50,7 +50,7 @@ export const editAlbum = [
         body('date', 'album date is required and must be a valid date in ISO 8601 format')
             .optional()
             .toDate(),
-        check('id', 'id is the id of the album, it is required and must be a valid ObjectId')
+        check('albumId', 'id is the id of the album, it is required and must be a valid ObjectId')
             .exists()
             .isString()
             .isHexadecimal()
@@ -58,7 +58,7 @@ export const editAlbum = [
     ]),
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const album = await AlbumService.update({ ...req.body, id: req.params.id });
+            const album = await AlbumService.update({ ...req.body, id: req.params.albumId });
             if (!album) {
                 throw new BadRequestError(['Album with id does not exist']);
             }
@@ -76,14 +76,14 @@ export const editAlbum = [
 
 export const deleteAlbum = [
     validatorMiddleware([
-        check('id', "id is the album's id and it's required")
+        check('albumId', 'albumId is required and must be a valid ObjectId')
             .exists()
             .isString()
             .isLength({ min: 2 }),
     ]),
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            await AlbumService.delete(req.params.id);
+            await AlbumService.delete(req.params.albumdId);
 
             return res.status(httpStatusCodes.NO_CONTENT).json({
                 success: true,
@@ -97,14 +97,14 @@ export const deleteAlbum = [
 
 export const getAlbum = [
     validatorMiddleware([
-        check('id', "id is the album's id and it's required")
+        check('albumId', "id is the album's id and it's required")
             .exists()
             .isString()
             .isLength({ min: 2 }),
     ]),
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const album = await AlbumService.getById(req.params.id);
+            const album = await AlbumService.getById(req.params.albumId);
             if (!album) {
                 throw new BadRequestError(['Album with id does not exist']);
             }
@@ -138,7 +138,7 @@ export const addTrack = () => {
 
     return [
         validatorMiddleware([
-            check('id', "id is the album's id and it's required and must be a valid ObjectId")
+            check('albumId', "albumId and it's required and must be a valid ObjectId")
                 .exists()
                 .isString()
                 .isHexadecimal()
@@ -151,7 +151,7 @@ export const addTrack = () => {
                     throw new BadRequestError(['track name is required']);
                 }
 
-                const album = await AlbumService.addTrack(req.params.id, {
+                const album = await AlbumService.addTrack(req.params.albumId, {
                     file: (req as any).file,
                     name: req.body.name,
                 });
@@ -235,9 +235,10 @@ export const getTrack = [
 
 export const getAllTracks = [
     validatorMiddleware([
-        check('id', "id is the album's id and it's required")
+        check('albumId', "id is the album's id and must be a valid ObjectId")
             .exists()
             .isString()
+            .isHexadecimal()
             .isLength({ min: 2 }),
     ]),
 
@@ -258,9 +259,10 @@ export const getAllTracks = [
 
 export const deleteTrack = [
     validatorMiddleware([
-        check('id', "id is the album's id and it's required")
+        check('albumId', "id is the album's id and it's required")
             .exists()
             .isString()
+            .isHexadecimal()
             .isLength({ min: 2 }),
     ]),
 
@@ -268,7 +270,7 @@ export const deleteTrack = [
         try {
             const { albumId, trackId } = req.params;
             const album = await AlbumService.deleteTrack(albumId, trackId);
-            return res.status(httpStatusCodes.OK).json({
+            return res.status(httpStatusCodes.NO_CONTENT).json({
                 success: true,
                 data: album,
                 message: 'Tracked fetched successfully',
