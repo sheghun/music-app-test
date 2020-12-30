@@ -40,14 +40,13 @@ export class AlbumService {
      * @param addTrackRequest
      */
     static async addTrack(albumId: string, addTrackRequest: AddTrackRequest) {
-        console.log(addTrackRequest)
-        const uploadData = await FileRepository.uploadFile(addTrackRequest.file);
         const album: AlbumModel = await this.model.findById(albumId);
 
         if (!album) {
             throw new BadRequestError(['Album with id does not exist']);
         }
 
+        const uploadData = await FileRepository.uploadFile(addTrackRequest.file);
         album.tracks = [...album.tracks, { name: addTrackRequest.name, file: uploadData.Location }] as any;
 
         return album.save();

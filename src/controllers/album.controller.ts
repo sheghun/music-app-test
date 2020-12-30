@@ -50,7 +50,7 @@ export const editAlbum = [
         body('date', 'album date is required and must be a valid date in ISO 8601 format')
             .optional()
             .toDate(),
-        check('id', 'id is the id of the album, it is required and must be an ObjectId')
+        check('id', 'id is the id of the album, it is required and must be a valid ObjectId')
             .exists()
             .isString()
             .isHexadecimal()
@@ -138,9 +138,10 @@ export const addTrack = () => {
 
     return [
         validatorMiddleware([
-            check('id', "id is the album's id and it's required")
+            check('id', "id is the album's id and it's required and must be a valid ObjectId")
                 .exists()
                 .isString()
+                .isHexadecimal()
                 .isLength({ min: 2 }),
         ]),
         upFile.single('song'),
@@ -169,17 +170,20 @@ export const addTrack = () => {
 
 export const editTrack = [
     validatorMiddleware([
-        check('albumId', 'album id is required')
+        check('albumId', 'album id is required and must be a valid ObjectId')
             .exists()
             .isString()
+            .isHexadecimal()
             .isLength({ min: 2 }),
-        check('trackId', 'trackId is required')
+        check('trackId', 'trackId is required and must be a valid ObjectId')
             .exists()
             .isString()
+            .isHexadecimal()
             .isLength({ min: 2 }),
         body('name', 'name of track is required')
             .exists()
             .isString()
+            .isHexadecimal()
             .isLength({ min: 2 }),
     ]),
 

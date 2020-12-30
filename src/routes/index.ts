@@ -6,7 +6,7 @@ const router = Router();
 
 router.post('/album', albumController.createAlbum);
 router.get('/albums', albumController.getAllAlbums);
-router.post('/album/:id/track', albumController.addTrack);
+router.post('/album/:id/track', albumController.addTrack());
 router.put('/album/:albumId/track/:trackId', albumController.editTrack);
 router.get('/album/:albumId/track/:trackId', albumController.getTrack);
 router.delete('/album/:albumId/track/:trackId', albumController.deleteTrack);

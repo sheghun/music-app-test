@@ -15,7 +15,7 @@ export class FileRepository {
 
             const param = {
                 Bucket: process.env.AWS_BUCKET_NAME,
-                Key: `${cryptoRandomString()}.${filExt}`,
+                Key: `${cryptoRandomString({ length: 10 })}.${filExt}`,
                 Body: file.buffer,
                 ContentType: file.mimetype,
                 ACL: 'public-read',
