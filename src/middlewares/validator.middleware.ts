@@ -11,7 +11,10 @@ export default function inputs(validations: Array<ValidationChain>) {
             return next();
         }
 
-        const errorMessages = errors.array().map(error => error.msg);
+        const errorMessages = errors
+            .array()
+            .map(error => error.msg)
+            .filter((msg, index, array) => array.indexOf(msg) === index); // Remove duplicate error messages
 
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, errors: errorMessages });
     };

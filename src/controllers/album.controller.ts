@@ -183,7 +183,6 @@ export const editTrack = [
         body('name', 'name of track is required')
             .exists()
             .isString()
-            .isHexadecimal()
             .isLength({ min: 2 }),
     ]),
 
@@ -207,13 +206,15 @@ export const editTrack = [
 
 export const getTrack = [
     validatorMiddleware([
-        check('albumId', 'album id is required')
+        check('albumId', 'album id is required and must be a valid ObjectId')
             .exists()
             .isString()
+            .isHexadecimal()
             .isLength({ min: 2 }),
-        check('trackId', 'trackId is required')
+        check('trackId', 'track id is required and must be a valid ObjectId')
             .exists()
             .isString()
+            .isHexadecimal()
             .isLength({ min: 2 }),
     ]),
 

@@ -73,13 +73,9 @@ export class AlbumService {
             return album.tracks;
         }
 
-        const track = album.tracks.find(track => track._id === trackId);
+        const trackIndex = this._getTrackIndex(JSON.parse(JSON.stringify(album.toJSON().tracks)), trackId);
 
-        if (!track) {
-            throw new BadRequestError(['Track with id does not exist in album']);
-        }
-
-        return track;
+        return album.tracks[trackIndex];
     }
 
     /**
@@ -128,6 +124,7 @@ export class AlbumService {
     }
 
     static _getTrackIndex(tracks: AlbumModel['tracks'], trackId: string | null) {
+        console.log(trackId);
         const trackIndex = tracks.findIndex(track => track._id === trackId);
 
         if (trackIndex === -1) {
