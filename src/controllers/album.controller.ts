@@ -50,9 +50,10 @@ export const editAlbum = [
         body('date', 'album date is required and must be a valid date in ISO 8601 format')
             .optional()
             .toDate(),
-        check('id', "id is the album and it's required")
+        check('id', 'id is the id of the album, it is required and must be an ObjectId')
             .exists()
             .isString()
+            .isHexadecimal()
             .isLength({ min: 2 }),
     ]),
     async (req: Request, res: Response, next: NextFunction) => {

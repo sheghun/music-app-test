@@ -40,6 +40,7 @@ export class AlbumService {
      * @param addTrackRequest
      */
     static async addTrack(albumId: string, addTrackRequest: AddTrackRequest) {
+        console.log(addTrackRequest)
         const uploadData = await FileRepository.uploadFile(addTrackRequest.file);
         const album: AlbumModel = await this.model.findById(albumId);
 

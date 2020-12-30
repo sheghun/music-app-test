@@ -11,7 +11,7 @@ router.put('/album/:albumId/track/:trackId', albumController.editTrack);
 router.get('/album/:albumId/track/:trackId', albumController.getTrack);
 router.delete('/album/:albumId/track/:trackId', albumController.deleteTrack);
 router.get('/album/:id/tracks', albumController.getAllTracks);
-router.get('/album/id', albumController.getAlbum);
+router.get('/album/:id', albumController.getAlbum);
 router.put('/album/:id', albumController.editAlbum);
 router.delete('/album/:id', albumController.deleteAlbum);
 

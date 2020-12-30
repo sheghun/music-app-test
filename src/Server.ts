@@ -8,11 +8,12 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from './utils/Logger';
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { setId } from './model/plugin/set-id.plugin';
+import { BadRequestError } from './interfaces/errors.interface';
 
 const app = express();
-const { BAD_REQUEST } = StatusCodes;
+const { BAD_REQUEST, INTERNAL_SERVER_ERROR } = StatusCodes;
 
 /** ***********************************
  * SET UP DB
@@ -56,13 +57,20 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Add APIs
-app.use('/api', BaseRouter);
+app.use('/', BaseRouter);
 
 // Print API errors
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     logger.err(err, true);
-    return res.status(BAD_REQUEST).json({
+    if (err instanceof BadRequestError) {
+        return res.status(BAD_REQUEST).json({
+            success: false,
+            errors: err.errors,
+        });
+    }
+
+    return res.status(INTERNAL_SERVER_ERROR).json({
         error: err.message,
     });
 });
