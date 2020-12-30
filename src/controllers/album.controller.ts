@@ -3,6 +3,7 @@ import validatorMiddleware from '../middlewares/validator.middleware';
 import httpStatusCodes from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { AlbumService } from '../services/album.service';
+import { BadRequestError } from '../interfaces/errors.interface';
 
 export const createAlbum = [
     validatorMiddleware([
@@ -34,7 +35,7 @@ export const createAlbum = [
     },
 ];
 
-export const editAlbum = function editAlbum() {
+export const editAlbum = [
     validatorMiddleware([
         body('name', 'album name should be a valid string')
             .optional()
@@ -52,25 +53,68 @@ export const editAlbum = function editAlbum() {
             .isString()
             .isLength({ min: 2 }),
     ]),
-        async (req: Request, res: Response, next: NextFunction) => {
-            try {
-                const album = await AlbumService.update({ ...req.body, id: req.params.id });
-
-                return res.status(httpStatusCodes.OK).json({
-                    success: true,
-                    data: album,
-                    message: 'Album created successfully',
-                });
-            } catch (err) {
-                next(err);
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const album = await AlbumService.update({ ...req.body, id: req.params.id });
+            if (!album) {
+                throw new BadRequestError(['Album with id does not exist']);
             }
-        };
-};
 
-export const deleteAlbum = function deleteAlbum() {};
+            return res.status(httpStatusCodes.OK).json({
+                success: true,
+                data: album,
+                message: 'Album updated successfully',
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+];
 
-export const getAlbum = function getAlbum() {};
+export const deleteAlbum = [
+    validatorMiddleware([
+        check('id', "id is the album's id and it's required")
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+    ]),
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            await AlbumService.delete(req.params.id);
 
+            return res.status(httpStatusCodes.NO_CONTENT).json({
+                success: true,
+                message: 'Album deleted successfully',
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+];
+
+export const getAlbum = [
+    validatorMiddleware([
+        check('id', "id is the album's id and it's required")
+            .exists()
+            .isString()
+            .isLength({ min: 2 }),
+    ]),
+    async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const album = await AlbumService.getById(req.params.id);
+            if (!album) {
+                throw new BadRequestError(['Album with id does not exist']);
+            }
+
+            return res.status(httpStatusCodes.NO_CONTENT).json({
+                success: true,
+                message: 'Album deleted successfully',
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+];
 export const getAllAlbums = function getAllAlbums() {};
 
 export const addTrack = function addTracks() {};
