@@ -1,6 +1,6 @@
 export interface CreateAlbumRequest {
     name: string;
-    date: date;
+    date: Date;
     description: string;
 }
 

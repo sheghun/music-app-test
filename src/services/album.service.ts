@@ -2,7 +2,7 @@ import { AddTrackRequest, CreateAlbumRequest } from '../interfaces/album.interfa
 import { Album, AlbumModel } from '../model/album.model';
 import { FileRepository } from '../repositories/file.repository';
 
-class AlbumService {
+export class AlbumService {
     static model = Album;
 
     /**
@@ -65,7 +65,7 @@ class AlbumService {
      * @param trackId
      * @param name
      */
-    static async editTrack(albumId: string, trackId: string, { name }) {
+    static async updateTrack(albumId: string, trackId: string, { name }) {
         const album: AlbumModel = await this.model.findById(albumId);
         const clonedTracks: AlbumModel['tracks'] = JSON.parse(JSON.stringify(album.toJSON().tracks));
 

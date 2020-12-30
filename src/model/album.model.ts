@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import { omitJsonFields } from './plugin/omit-json-fields.plugin';
 
 export interface AlbumModel extends mongoose.Document {
+    id: string;
     name: string;
     description: string;
     date: Date;
