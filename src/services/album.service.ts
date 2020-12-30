@@ -64,6 +64,7 @@ export class AlbumService {
         allTracks = false,
     ): Promise<AlbumModel['tracks'][0] | AlbumModel['tracks']> {
         const album: AlbumModel = await this.model.findById(albumId);
+
         if (!album) {
             throw new BadRequestError(['Album with id does not exist']);
         }
@@ -94,11 +95,7 @@ export class AlbumService {
         }
 
         const clonedTracks: AlbumModel['tracks'] = JSON.parse(JSON.stringify(album.toJSON().tracks));
-        const trackToDeleteIndex = clonedTracks.findIndex(track => track._id === trackId);
-
-        if (trackToDeleteIndex === -1) {
-            throw new BadRequestError(['Track with id does not exist']);
-        }
+        const trackToDeleteIndex = this._getTrackIndex(clonedTracks, trackId);
 
         clonedTracks.splice(trackToDeleteIndex, 1);
 
@@ -113,7 +110,7 @@ export class AlbumService {
      * @param trackId
      * @param name
      */
-    static async updateTrack(albumId: string, trackId: string, { name }) {
+    static async updateTrack(albumId: string, trackId: string, { name }: { name: string }) {
         const album: AlbumModel = await this.model.findById(albumId);
 
         if (!album) {
@@ -121,17 +118,22 @@ export class AlbumService {
         }
 
         const clonedTracks: AlbumModel['tracks'] = JSON.parse(JSON.stringify(album.toJSON().tracks));
-
-        const trackIndexToEdit = clonedTracks.findIndex(track => track._id === trackId);
-
-        if (trackIndexToEdit === -1) {
-            throw new BadRequestError(['Track with id does not exist']);
-        }
+        const trackIndexToEdit = this._getTrackIndex(clonedTracks, trackId);
 
         clonedTracks[trackIndexToEdit] = { ...clonedTracks[trackIndexToEdit], name };
 
         album.tracks = clonedTracks;
 
         return album.save();
+    }
+
+    static _getTrackIndex(tracks: AlbumModel['tracks'], trackId: string | null) {
+        const trackIndex = tracks.findIndex(track => track._id === trackId);
+
+        if (trackIndex === -1) {
+            throw new BadRequestError(['Track with id does not exist']);
+        }
+
+        return trackIndex;
     }
 }
