@@ -7,5 +7,4 @@ export interface CreateAlbumRequest {
 export interface AddTrackRequest {
     file: any;
     name: string;
-    date: string;
 }

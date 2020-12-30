@@ -2,8 +2,10 @@ import { body, check } from 'express-validator';
 import validatorMiddleware from '../middlewares/validator.middleware';
 import httpStatusCodes from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
+import multer from 'multer';
 import { AlbumService } from '../services/album.service';
 import { BadRequestError } from '../interfaces/errors.interface';
+import { Album } from '../model/album.model';
 
 export const createAlbum = [
     validatorMiddleware([
@@ -106,20 +108,67 @@ export const getAlbum = [
                 throw new BadRequestError(['Album with id does not exist']);
             }
 
-            return res.status(httpStatusCodes.NO_CONTENT).json({
+            return res.status(httpStatusCodes.OK).json({
                 success: true,
-                message: 'Album deleted successfully',
+                data: album,
+                message: 'Album fetched successfully',
             });
         } catch (err) {
             next(err);
         }
     },
 ];
-export const getAllAlbums = function getAllAlbums() {};
+export const getAllAlbums = async function getAllAlbums(req: Request, res: Response, next: NextFunction) {
+    try {
+        const albums = await Album.find({});
 
-export const addTrack = function addTracks() {};
+        return res.status(httpStatusCodes.OK).json({
+            success: true,
+            data: albums,
+            message: 'Albums retrieved successfully',
+        });
+    } catch (err) {
+        next(err);
+    }
+};
 
-export const editTrack = function editTrack() {};
+export const addTrack = () => {
+    const upFile = multer({ storage: multer.memoryStorage() });
+
+    return [
+        validatorMiddleware([
+            check('id', "id is the album's id and it's required")
+                .exists()
+                .isString()
+                .isLength({ min: 2 }),
+        ]),
+        upFile.single('song'),
+        async (req: Request, res: Response, next: NextFunction) => {
+            try {
+                if (!req.body.name) {
+                    throw new BadRequestError(['track name is required']);
+                }
+
+                const album = await AlbumService.addTrack(req.params.id, {
+                    file: (req as any).file,
+                    name: req.body.name,
+                });
+
+                return res.status(httpStatusCodes.OK).json({
+                    success: true,
+                    data: album,
+                    message: 'Album fetched successfully',
+                });
+            } catch (err) {
+                next(err);
+            }
+        },
+    ];
+};
+
+export const editTrack = [
+
+]
 
 export const getTrack = function getTrack() {};
 

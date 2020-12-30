@@ -95,7 +95,7 @@ export class AlbumService {
 
         const trackIndexToEdit = clonedTracks.findIndex(track => track._id === trackId);
 
-        if (trackToDeleteIndex === -1) {
+        if (trackIndexToEdit === -1) {
             throw new BadRequestError(['Track with id does not exist']);
         }
 
